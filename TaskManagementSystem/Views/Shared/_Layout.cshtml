@@ -1,0 +1,115 @@
+﻿@using TaskManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - Task Management</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/TaskManagementSystem.styles.css" asp-append-version="true" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+	<style>
+		/* Custom CSS */
+		.bg-light-blue {
+			background-color: #007bff; /* Use the desired light blue color code */
+		}
+
+		/* Change navbar text color to white */
+		.navbar-nav .nav-link {
+			color: white !important;
+		}
+
+		.navbar-brand {
+			color: white !important;
+		}
+
+		/* Sticky footer */
+		.footer {
+			width: 100%;
+			background-color: #007bff;
+			color: white;
+			padding: 20px 0;
+			text-align: center;
+			position: fixed;
+			bottom: 0;
+			line-height: 0px !important;
+		}
+
+	</style>
+</head>
+<body>
+	<header>
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-light-blue border-bottom box-shadow mb-3">
+			<div class="container-fluid">
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Task Management</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+					<ul class="navbar-nav flex-grow-1">
+						@if (User.Identity.IsAuthenticated)
+						{
+							var user = await UserManager.GetUserAsync(User);
+							if (user != null)
+							{
+								var isAdmin = await UserManager.IsInRoleAsync(user, "Admin");
+								if (isAdmin)
+								{
+									<li class="nav-item">
+										<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark" asp-area="" asp-controller="Ticket" asp-action="Index">Task</a>
+									</li>
+								}
+								else
+								{
+									<!-- Menu for non-admin users -->
+									<li class="nav-item">
+										<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark" asp-area="" asp-controller="AssignTicket" asp-action="Index">Assign Tickets</a>
+									</li>
+								}
+							}
+						}
+					</ul>
+					<div class="ml-auto">
+						<!-- This div aligns elements to the right -->
+						<ul class="navbar-nav">
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="container">
+		<main role="main" class="pb-3">
+			@RenderBody()
+		</main>
+	</div>
+
+	<footer class="footer bg-light-blue text-center text-muted">
+		<div class="container text-white">
+			&copy; 2024 TaskManagementSystem. All rights reserved.
+		</div>
+	</footer>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

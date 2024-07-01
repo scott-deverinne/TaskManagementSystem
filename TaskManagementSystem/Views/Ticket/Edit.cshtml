@@ -1,0 +1,105 @@
+﻿@model TaskManagementSystem.Models.Ticket
+
+@{
+	ViewData["Title"] = Model.Id == 0 ? "Create Task" : "Edit Task";
+	Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+	<link href="~/css/modal.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<h1 style="text-align: center; display: flex; justify-content: space-between;">
+	@ViewData["Title"]
+</h1>
+<br />
+<div id="editModal">
+    <form id="editForm">
+        <input type="hidden" asp-for="Id" id="Id" />
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="Title"><b>Title:</b></label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" class="form-control" required asp-for="Title" id="Title" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="Description"><b>Description:</b></label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="text" class="form-control" required asp-for="Description" id="Description" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-2">
+                <div class="form-group">
+                    <label for="DueDate"><b>Due Date:</b></label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="date" class="form-control" required asp-for="DueDate" id="DueDate"/>
+                    <span asp-validation-for="DueDate" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <br />
+        <button type="button" onclick="saveChanges()" class="btn btn-primary float-end">Save</button>
+    </form>
+</div>
+
+<script>
+
+	function saveChanges() {
+		// Gather form data
+
+		var formData = {
+			Id: $('#Id').val(),
+			Title: $('#Title').val(),
+			Description: $('#Description').val(),
+			DueDate: $('#DueDate').val()
+		};
+
+        // Check that none of the fields are empty
+        if (!formData.Title || !formData.Description || !formData.DueDate) {
+            alert("Please fill out all required fields.");
+            return; // Exit the function if validation fails
+        }
+
+        console.log(formData);
+
+		// Send AJAX request
+		$.ajax({
+			url: '/Ticket/SaveChanges', // Update with your controller and action names
+			type: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify(formData),
+			success: function (data) {
+				// Handle success response
+				console.log(data);
+				alert(data);
+				// Reload the main ticket page
+				window.open('@Url.Action("Index", "Ticket")', "_self")
+			},
+			error: function (error) {
+				// Handle error response
+				console.error(error);
+				alert(error.responseText);
+			}
+		});
+	}
+</script>
+
+

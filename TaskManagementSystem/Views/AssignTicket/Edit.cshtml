@@ -1,0 +1,78 @@
+﻿@model TaskManagementSystem.Models.Ticket
+
+@{
+	ViewData["Title"] = "Assign Ticket";
+	Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+	<link href="~/css/modal.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<h1 style="text-align: center; display: flex; justify-content: space-between;">
+	@ViewData["Title"] #@Model.Id
+</h1>
+<br />
+<div id="editModal">
+	<form id="editForm" asp-controller="AssignTicket" asp-action="SaveChanges" method="post">
+		<input type="hidden" asp-for="Id" />
+		<input type="hidden" asp-for="Title" />
+		<input type="hidden" asp-for="TicketCreatedDate" />
+		<input type="hidden" asp-for="Description" />
+		<div class="row">
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="Title"><b>Title</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="text" class="form-control" value="@Model.Title" disabled />
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="Description"><b>Description</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="text" class="form-control" disabled value="@Model.Description" />
+				</div>
+			</div>
+		</div>
+		<br />
+		<div class="row">
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="DueDate"><b>Due Date</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="date" class="form-control" required asp-for="DueDate" />
+					<span asp-validation-for="DueDate" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="State"><b>Task Status</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<select type="text" class="form-control" asp-for="State">
+						<option value="0">Created</option>
+						<option value="1">InProgress</option>
+						<option value="2">Done</option>
+						<option value="3">Closed</option>
+					</select>
+					<span asp-validation-for="State" class="text-danger"></span>
+				</div>
+			</div>
+		</div>
+		<br />
+		<button type="submit" class="btn btn-primary float-end">Save</button>
+		<br />
+	</form>
+</div>

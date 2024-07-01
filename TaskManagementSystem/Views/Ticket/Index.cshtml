@@ -1,0 +1,59 @@
+﻿@model IEnumerable<TaskManagementSystem.Models.Ticket>
+@{
+	ViewData["Title"] = "Task";
+	Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+	<link href="~/css/modal.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+
+<h1 style="text-align: center; display: flex; justify-content: space-between;">
+	@ViewData["Title"]
+	<button class="btn btn-primary" onclick="openEditPage('')">
+		<i class="bi bi-plus"></i> Add Task
+	</button>
+</h1>
+<br />
+<table class="table">
+	<thead style="text-align: center;">
+		<tr>
+			<th>Task#</th>
+			<th>Title</th>
+			<th>Description</th>
+			<th>Status</th>
+			<th>Assigned To</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody style="text-align: center;">
+		@foreach (var ticket in Model)
+		{
+			<tr>
+				<td>@ticket.Id </td>
+				<td>@ticket.Title  </td>
+				<td>@ticket.Description</td>
+				<td>@ticket.State</td>
+				<td>@ticket?.AssignedEmployee?.FirstName @ticket?.AssignedEmployee?.LastName</td>
+				<td>
+					<a href="#" class="btn btn-primary" onclick="openEditPage('@ticket.Id')">
+						<i class="bi bi-pencil"></i> Edit
+					</a>
+					<a href="#" class="btn btn-danger" onclick="openDeleteModal('@ticket.Id')">
+						<i class="bi bi-trash"></i> Delete
+					</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<script>
+	function openEditPage(ticketId) {
+		window.location.href = '/Ticket/Edit/' + ticketId; // Replace '/Ticket  /Edit/' with the actual edit page URL
+	}
+</script>
+
+<!-- Include the Delete Modal -->
+ @Html.Partial("_Delete") 

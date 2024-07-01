@@ -1,0 +1,135 @@
+﻿@using TaskManagementSystem.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+
+@{
+    ViewData["Title"] = "Home Page";
+    var isAdmin = User.IsInRole("Admin");
+    var user = await UserManager.GetUserAsync(User);
+    var firstName = user?.FirstName;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .jumbotron {
+            background-color: #343a40;
+            color: #fff;
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        h1,
+        p {
+            text-align: center;
+        }
+
+        a {
+            color: #007bff;
+        }
+
+            a:hover {
+                text-decoration: none;
+                color: #0056b3;
+            }
+
+        .carousel-item img {
+            max-width: 100%;
+            height: 370px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .carousel-caption {
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+            .carousel-caption h5,
+            .carousel-caption p {
+                color: white;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <br />
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <br>
+                <div class="jumbotron">
+                    @if (!string.IsNullOrEmpty(firstName))
+                    {
+                        <h1 class="display-4">Welcome, @firstName</h1>
+                    }
+                    else
+                    {
+                        <h1 class="display-4">Welcome</h1>
+                    }
+                    @if (isAdmin)
+                    {
+                        <p class="lead">Manage your Task Management efficiently.</p>
+                        <hr class="my-4">
+                        <p>View, edit, and manage tickets and users.</p>
+                        <br />
+                        <a class="btn btn-primary btn-lg float-end" href="@Url.Action("Index","Ticket")" role="button">Manage Tasks</a>
+                    }
+                    else
+                    {
+                        <p class="lead">Explore and interact with Task Management management system.</p>
+                        <hr class="my-4">
+                        <p>View and assign tickets, due date, change status, and more.</p>
+                        <a class="btn btn-primary btn-lg float-end" href="@Url.Action("Index","AssignTicket")" role="button">Explore</a>
+                    }
+                    <br />
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="~/images/task-management.jpg" class="d-block w-100" alt="Task Management">
+                        </div>
+                        <div class="carousel-item">
+                            <img src="~/images/task-management.png" class="d-block w-100" alt="Task Management">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var carousel = document.querySelector('.carousel');
+        var carouselInstance = new bootstrap.Carousel(carousel, {
+            interval: 2000
+        });
+    </script>
+</body>
+
+</html>

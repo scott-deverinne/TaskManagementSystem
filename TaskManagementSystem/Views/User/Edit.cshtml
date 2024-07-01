@@ -1,0 +1,169 @@
+﻿@model TaskManagementSystem.Models.AppUser
+
+@{
+	ViewData["Title"] = string.IsNullOrEmpty(Model.Role) ? "Create User" : "Edit User";
+	Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+	<link href="~/css/modal.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<h1 style="text-align: center; display: flex; justify-content: space-between;">
+	@ViewData["Title"]
+</h1>
+<br />
+<div id="editModal">
+	<form id="editForm">
+		<input type="hidden" asp-for="Id" />
+		<div class="row">
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="FirstName"><b>First Name:</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="text" class="form-control" asp-for="FirstName" />
+					<span asp-validation-for="FirstName" class="text-danger"></span>
+				</div>
+			</div>
+
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="FirstName"><b>Last Name:</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="text" class="form-control" asp-for="LastName" />
+					<span asp-validation-for="LastName" class="text-danger"></span>
+				</div>
+			</div>
+		</div>
+		<br />
+		<div class="row">
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="Email"><b>Email:</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="email" class="form-control @(string.IsNullOrEmpty(Model.Role) ? "" : "disabled")" asp-for="Email" />
+					<span asp-validation-for="Email" class="text-danger"></span>
+				</div>
+			</div>
+
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="PasswordHash"><b>Password:</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="text" class="form-control @(string.IsNullOrEmpty(Model.Role) ? "" : "disabled")" asp-for="PasswordHash" />
+					<span asp-validation-for="PasswordHash" class="text-danger"></span>
+				</div>
+			</div>
+		</div>
+		<br />
+		<div class="row">
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="Designation"><b>Designation:</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="text" class="form-control" asp-for="Designation" />
+					<span asp-validation-for="Designation" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="Role"><b>Role:</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<select asp-for="Role" class="form-control @(string.IsNullOrEmpty(Model.Role) ? "" : "disabled")">
+						<option value="User">User</option>
+						<option value="Admin">Admin</option>
+					</select>
+				</div>
+			</div>
+
+		</div>
+		<br />
+		<div class="row">
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="BirthDate"><b>Birth date:</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="date" class="form-control" asp-for="BirthDate" />
+					<span asp-validation-for="BirthDate" class="text-danger"></span>
+				</div>
+			</div>
+			<div class="col-md-2">
+				<div class="form-group">
+					<label for="PhoneNumber"><b>Phone Number:</b></label>
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<input type="number" class="form-control" asp-for="PhoneNumber" />
+					<span asp-validation-for="PhoneNumber" class="text-danger"></span>
+				</div>
+			</div>
+		</div>
+		<br />
+		<button type="button" onclick="saveChanges()" class="btn btn-primary float-end">Save</button>
+	</form>
+</div>
+
+<script>
+	$(document).ready(function () {
+		$(".disabled").prop("disabled", true);
+	});
+
+	function saveChanges() {
+		// Gather form data
+
+		var formData = {
+			FirstName: $('#FirstName').val(),
+			LastName: $('#LastName').val(),
+			Designation: $('#Designation').val(),
+			Role: $('#Role').val(),
+			BirthDate: $('#BirthDate').val(),
+			Email: $('#Email').val(),
+			PasswordHash: $('#PasswordHash').val(),
+			PhoneNumber: $('#PhoneNumber').val()
+		};
+
+		// Send AJAX request
+		$.ajax({
+			url: '/User/SaveChanges', // Update with your controller and action names
+			type: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify(formData),
+			success: function (data) {
+				// Handle success response
+				console.log(data);
+				alert(data);
+				// Reload the main ticket page
+				window.open('@Url.Action("Index", "User")',"_self")
+			},
+			error: function (error) {
+				// Handle error response
+				console.error(error);
+				alert(error.responseText);
+			}
+		});
+	}
+</script>
+
+
